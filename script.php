@@ -41,11 +41,34 @@ Class App
 
         $f = fopen($file, 'r');
         $i = 0;
-        while (($buffer = fgets($f)) !== false && $i < 10) {
-            echo $buffer;
+        $arr = [];
+        while (($buffer = fscanf($f, "%s %s")) !== false) {
+            $arr[] = $buffer[1];
             $i++;
+
+            if ($i == 500) {
+                $this->save($arr);
+                $i = 0;
+                $arr = [];
+            }
         }
         fclose($f);
+
+        $this->save($arr);
+    }
+
+    protected function save(array $data)
+    {
+        $sql = "INSERT IGNORE INTO `pass` (`password`, `hash_md5`) VALUES ";
+
+        $values = [];
+        foreach ($data as $item) {
+            $values[] = "('{$item}', MD5('{$item}'))";
+        }
+        $sql .= implode(',', $values);
+
+        $sth = $this->pdo->prepare($sql);
+        $sth->execute();
     }
 }
 
