@@ -43,7 +43,10 @@ Class App
         $i = 0;
         $arr = [];
         while (($buffer = fscanf($f, "%s %s")) !== false) {
-            $arr[] = $buffer[1];
+            // detect non-ASCII
+            if (!preg_match('/[^\x20-\x7f]/', $buffer[1])) {
+                $arr[] = $buffer[1];
+            }
             $i++;
 
             if ($i == 500) {

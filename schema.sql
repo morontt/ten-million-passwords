@@ -4,4 +4,4 @@ CREATE TABLE `pass` (
   `hash_md5` CHAR(32),
   PRIMARY KEY (`id`),
   UNIQUE KEY `password` (`password`)
-);
+) DEFAULT CHARACTER SET ascii COLLATE ascii_bin;
